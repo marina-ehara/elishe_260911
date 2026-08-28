@@ -40,6 +40,11 @@
             background-color: #ffffff;
         }
         
+        /* ドットがない場合は下の余白をなくす */
+        .carousel-wrapper.no-dots {
+            padding-bottom: 0;
+        }
+        
         .carousel-track {
             display: flex;
             width: 100%;
@@ -91,7 +96,15 @@
         
         <img src="LP_ELISHE_260911_02.jpg" alt="Modern Duality LOOK 1">
         
-        <img src="LP_ELISHE_260911_03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+        <div class="carousel-wrapper no-dots">
+            <div class="carousel-track">
+                <img src="LP_ELISHE_260911_03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_03-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_03-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_03-04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+            </div>
+            </div>
+
         <img src="LP_ELISHE_260911_04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         
         <img src="LP_ELISHE_260911_05.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
@@ -148,19 +161,22 @@
             const images = Array.from(track.children);
             const originalLength = images.length;
             const dotsContainer = wrapper.querySelector('.carousel-dots');
+            let dots = [];
 
-            // 1. ドットを画像の枚数分だけ自動生成する
-            for (let i = 0; i < originalLength; i++) {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (i === 0) dot.classList.add('active'); 
-                
-                dot.addEventListener('click', () => {
-                    currentSlide(i);
-                });
-                dotsContainer.appendChild(dot);
+            // 1. ドットのコンテナが存在する場合のみドットを生成する
+            if (dotsContainer) {
+                for (let i = 0; i < originalLength; i++) {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (i === 0) dot.classList.add('active'); 
+                    
+                    dot.addEventListener('click', () => {
+                        currentSlide(i);
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+                dots = Array.from(dotsContainer.children);
             }
-            const dots = Array.from(dotsContainer.children);
 
             // 2. 無限ループ用に最初と最後の画像を複製（クローン）して追加
             const firstClone = images[0].cloneNode(true);
@@ -186,9 +202,12 @@
                 if (dotIndex === originalLength) dotIndex = 0;
                 if (dotIndex < 0) dotIndex = originalLength - 1;
                 
-                dots.forEach(dot => dot.classList.remove('active'));
-                if (dots[dotIndex]) {
-                    dots[dotIndex].classList.add('active');
+                // ドットが存在する場合のみ色を変える
+                if (dots.length > 0) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    if (dots[dotIndex]) {
+                        dots[dotIndex].classList.add('active');
+                    }
                 }
             }
 
@@ -220,7 +239,6 @@
             });
 
             // ＝＝ 手動スワイプ・ドラッグ機能 ＝＝
-            // passive: false にすることで e.preventDefault()（画面スクロールの無効化）を使えるようにする
             track.addEventListener('touchstart', touchStart, { passive: false });
             track.addEventListener('touchmove', touchMove, { passive: false });
             track.addEventListener('touchend', touchEnd);
@@ -246,12 +264,10 @@
                 const diffX = currentPositionX - startPosX;
                 const diffY = currentPositionY - startPosY;
 
-                // 縦スクロール（上下の指の動き）の方が大きい場合は、スワイプをキャンセルして画面スクロールを優先する
                 if (Math.abs(diffY) > Math.abs(diffX)) {
                     return;
                 }
 
-                // 横スクロールの場合は、画面が一緒に動かないようにする
                 if (e.cancelable) {
                     e.preventDefault();
                 }
@@ -268,7 +284,6 @@
                 const endPos = e.type.includes('mouse') ? e.pageX : (e.changedTouches ? e.changedTouches[0].clientX : startPosX);
                 const diff = endPos - startPosX;
 
-                // 50px以上スワイプしたら前後の画像へ、足りなければ元の画像に戻る
                 if (diff < -50) {
                     nextSlide();
                 } else if (diff > 50) {
@@ -279,7 +294,6 @@
                 startAutoSlide();
             }
 
-            // X座標とY座標の取得関数
             function getPositionX(e) {
                 return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             }
@@ -296,11 +310,9 @@
 
             function startAutoSlide() {
                 clearInterval(autoSlideInterval);
-                // 変更点：自動スライドの間隔を2秒（2000ミリ秒）に設定
-                autoSlideInterval = setInterval(nextSlide, 2000);
+                autoSlideInterval = setInterval(nextSlide, 2000); // すべてのスライダーが2秒ごと
             }
 
-            // 初期ロード時に自動スライド開始
             startAutoSlide();
         });
     </script>
