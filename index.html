@@ -86,209 +86,198 @@
         
         <img src="LP_ELISHE_260911_02.jpg" alt="Modern Duality LOOK 1">
         
-        <!-- LOOK1 -->
         <img src="LP_ELISHE_260911_03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         
-        <!-- LOOK2 画像 -->
         <img src="LP_ELISHE_260911_05.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_06.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         
-        <!-- LOOK3 画像 -->
         <img src="LP_ELISHE_260911_07.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_08.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <!-- LOOK4 画像 -->
         <img src="LP_ELISHE_260911_09.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_10.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <!-- LOOK5 画像 -->
         <img src="LP_ELISHE_260911_11.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_12.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <!-- カラバリ画像（無限ループ＆スワイプ対応スライド） -->
         <div class="carousel-wrapper">
-            <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-track">
                 <img src="LP_ELISHE_260911_13.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_13-03.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_13-04.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            
-            <div class="carousel-dots">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-            </div>
-        </div>
+            <div class="carousel-dots"></div> </div>
 
         <img src="LP_ELISHE_260911_14.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <!-- カラバリ画像（無限ループ＆スワイプ対応スライド） -->
         <div class="carousel-wrapper">
-            <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-track">
                 <img src="LP_ELISHE_260911_15.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_15-02.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_15-03.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            
-            <div class="carousel-dots">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-            </div>
+            <div class="carousel-dots"></div>
         </div>
 
         <img src="LP_ELISHE_260911_16.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <!-- カラバリ画像（無限ループ＆スワイプ対応スライド） -->
         <div class="carousel-wrapper">
-            <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-track">
                 <img src="LP_ELISHE_260911_17.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_17-02.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_17-03.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_17-04.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            
-            <div class="carousel-dots">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-                <span class="dot" onclick="currentSlide(3)"></span>
-            </div>
+            <div class="carousel-dots"></div>
         </div>
         
-        <!-- オンラインチェック（フッター部） -->
         <img src="LP_ELISHE_260911_18.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         <img src="LP_ELISHE_260911_19.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
     </div>
 
-    <!-- ＝＝＝ カルーセルを動かすためのJavaScript ＝＝＝ -->
     <script>
-        const track = document.getElementById('carouselTrack');
-        const images = Array.from(track.children);
-        const dots = document.querySelectorAll('.dot');
-        const originalLength = images.length;
+        // ページ内のすべてのカルーセルを取得して、それぞれをセットアップする
+        document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
+            const track = wrapper.querySelector('.carousel-track');
+            const images = Array.from(track.children);
+            const originalLength = images.length;
+            const dotsContainer = wrapper.querySelector('.carousel-dots');
 
-        // 無限ループ用に最初と最後の画像を複製（クローン）して追加
-        const firstClone = images[0].cloneNode(true);
-        const lastClone = images[originalLength - 1].cloneNode(true);
-        track.appendChild(firstClone);
-        track.insertBefore(lastClone, images[0]);
+            // 1. ドットを画像の枚数分だけ自動生成する
+            for (let i = 0; i < originalLength; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active'); // 最初のドットをアクティブに
+                
+                // ドットをクリックした時の処理
+                dot.addEventListener('click', () => {
+                    currentSlide(i);
+                });
+                dotsContainer.appendChild(dot);
+            }
+            const dots = Array.from(dotsContainer.children);
 
-        let slideIndex = 1; // クローンを追加したので1からスタート
-        let isDragging = false;
-        let startPos = 0;
-        let autoSlideInterval;
+            // 2. 無限ループ用に最初と最後の画像を複製（クローン）して追加
+            const firstClone = images[0].cloneNode(true);
+            const lastClone = images[originalLength - 1].cloneNode(true);
+            track.appendChild(firstClone);
+            track.insertBefore(lastClone, images[0]);
 
-        // 初期位置に移動（アニメーションなし）
-        track.style.transform = `translateX(-${slideIndex * 100}%)`;
+            let slideIndex = 1; // クローンを追加したので1からスタート
+            let isDragging = false;
+            let startPos = 0;
+            let autoSlideInterval;
 
-        // スライドを動かす処理
-        function updateSlide() {
-            track.style.transition = "transform 0.4s ease-in-out";
+            // 初期位置に移動（アニメーションなし）
             track.style.transform = `translateX(-${slideIndex * 100}%)`;
 
-            // ドットの表示切替
-            let dotIndex = slideIndex - 1;
-            if (dotIndex === originalLength) dotIndex = 0;
-            if (dotIndex < 0) dotIndex = originalLength - 1;
-            
-            dots.forEach(dot => dot.classList.remove('active'));
-            dots[dotIndex].classList.add('active');
-        }
-
-        // 次へ・前へ進む
-        function nextSlide() {
-            if (slideIndex >= originalLength + 1) return;
-            slideIndex++;
-            updateSlide();
-        }
-        
-        function prevSlide() {
-            if (slideIndex <= 0) return;
-            slideIndex--;
-            updateSlide();
-        }
-
-        // アニメーションが終わったタイミングで、クローンならこっそり本物にすり替える
-        track.addEventListener('transitionend', () => {
-            if (track.children[slideIndex] === firstClone) {
-                track.style.transition = "none";
-                slideIndex = 1;
+            // スライドを動かす処理
+            function updateSlide() {
+                track.style.transition = "transform 0.4s ease-in-out";
                 track.style.transform = `translateX(-${slideIndex * 100}%)`;
+
+                // ドットの表示切替
+                let dotIndex = slideIndex - 1;
+                if (dotIndex === originalLength) dotIndex = 0;
+                if (dotIndex < 0) dotIndex = originalLength - 1;
+                
+                dots.forEach(dot => dot.classList.remove('active'));
+                if (dots[dotIndex]) {
+                    dots[dotIndex].classList.add('active');
+                }
             }
-            if (track.children[slideIndex] === lastClone) {
-                track.style.transition = "none";
-                slideIndex = originalLength;
-                track.style.transform = `translateX(-${slideIndex * 100}%)`;
+
+            // 次へ進む
+            function nextSlide() {
+                if (slideIndex >= originalLength + 1) return;
+                slideIndex++;
+                updateSlide();
             }
-        });
-
-        // ＝＝ 手動スワイプ・ドラッグ機能 ＝＝
-        track.addEventListener('touchstart', touchStart);
-        track.addEventListener('touchend', touchEnd);
-        track.addEventListener('touchmove', touchMove);
-        track.addEventListener('mousedown', touchStart);
-        track.addEventListener('mouseup', touchEnd);
-        track.addEventListener('mouseleave', touchEnd);
-        track.addEventListener('mousemove', touchMove);
-
-        function touchStart(e) {
-            clearInterval(autoSlideInterval); // 操作中は自動再生ストップ
-            startPos = getPositionX(e);
-            isDragging = true;
-            track.style.transition = "none"; // 操作中はアニメーションを切る
-        }
-
-        function touchMove(e) {
-            if (!isDragging) return;
-            const currentPosition = getPositionX(e);
-            const diff = currentPosition - startPos;
-            const slideWidth = track.clientWidth;
-            const movePercent = (diff / slideWidth) * 100;
-            // 指の動きに合わせて追従させる
-            track.style.transform = `translateX(calc(-${slideIndex * 100}% + ${movePercent}%))`;
-        }
-
-        function touchEnd(e) {
-            if (!isDragging) return;
-            isDragging = false;
             
-            const endPos = e.type.includes('mouse') ? e.pageX : (e.changedTouches ? e.changedTouches[0].clientX : startPos);
-            const diff = endPos - startPos;
-
-            // 一定の距離（50px）動かしたらスライドを切り替える
-            if (diff < -50) {
-                nextSlide();
-            } else if (diff > 50) {
-                prevSlide();
-            } else {
-                updateSlide(); // 動かし足りない場合は元の位置に戻る
+            // 前へ戻る
+            function prevSlide() {
+                if (slideIndex <= 0) return;
+                slideIndex--;
+                updateSlide();
             }
-            startAutoSlide(); // 操作が終わったら自動再生を再開
-        }
 
-        // X座標の取得（PCマウスとスマホタッチ両対応）
-        function getPositionX(e) {
-            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-        }
+            // アニメーションが終わったタイミングで、クローンならこっそり本物にすり替える
+            track.addEventListener('transitionend', () => {
+                const currentImage = track.children[slideIndex];
+                if (currentImage === firstClone) {
+                    track.style.transition = "none";
+                    slideIndex = 1;
+                    track.style.transform = `translateX(-${slideIndex * 100}%)`;
+                }
+                if (currentImage === lastClone) {
+                    track.style.transition = "none";
+                    slideIndex = originalLength;
+                    track.style.transform = `translateX(-${slideIndex * 100}%)`;
+                }
+            });
 
-        // ドットボタンを押した時の処理
-        function currentSlide(index) {
-            clearInterval(autoSlideInterval);
-            slideIndex = index + 1; // クローン分ズレているので +1 する
-            updateSlide();
+            // ＝＝ 手動スワイプ・ドラッグ機能 ＝＝
+            track.addEventListener('touchstart', touchStart, { passive: true });
+            track.addEventListener('touchend', touchEnd);
+            track.addEventListener('touchmove', touchMove, { passive: true });
+            track.addEventListener('mousedown', touchStart);
+            track.addEventListener('mouseup', touchEnd);
+            track.addEventListener('mouseleave', touchEnd);
+            track.addEventListener('mousemove', touchMove);
+
+            function touchStart(e) {
+                clearInterval(autoSlideInterval);
+                startPos = getPositionX(e);
+                isDragging = true;
+                track.style.transition = "none";
+            }
+
+            function touchMove(e) {
+                if (!isDragging) return;
+                const currentPosition = getPositionX(e);
+                const diff = currentPosition - startPos;
+                const slideWidth = track.clientWidth;
+                const movePercent = (diff / slideWidth) * 100;
+                track.style.transform = `translateX(calc(-${slideIndex * 100}% + ${movePercent}%))`;
+            }
+
+            function touchEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const endPos = e.type.includes('mouse') ? e.pageX : (e.changedTouches ? e.changedTouches[0].clientX : startPos);
+                const diff = endPos - startPos;
+
+                if (diff < -50) {
+                    nextSlide();
+                } else if (diff > 50) {
+                    prevSlide();
+                } else {
+                    updateSlide();
+                }
+                startAutoSlide();
+            }
+
+            function getPositionX(e) {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+
+            function currentSlide(index) {
+                clearInterval(autoSlideInterval);
+                slideIndex = index + 1;
+                updateSlide();
+                startAutoSlide();
+            }
+
+            function startAutoSlide() {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = setInterval(nextSlide, 1500);
+            }
+
+            // 初期ロード時に自動スライド開始
             startAutoSlide();
-        }
-
-        // 自動再生を開始する関数
-        function startAutoSlide() {
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = setInterval(nextSlide, 1500); // 1.5秒間隔
-        }
-
-        // ページ読み込み時に自動再生スタート
-        startAutoSlide();
+        });
     </script>
 </body>
 </html>
