@@ -28,26 +28,31 @@
             margin: 0;
             padding: 0;
             border: none;
+            pointer-events: none; /* ドラッグ時の画像ゴーストを防ぐ */
         }
 
         /* ＝＝＝ ここからカルーセル用のスタイル ＝＝＝ */
         .carousel-wrapper {
             position: relative;
             width: 100%;
-            overflow: hidden; /* 枠外にはみ出た画像を隠す */
+            padding-bottom: 20px; /* ドットのための余白 */
+            overflow: hidden;
+            background-color: #ffffff;
         }
         
         .carousel-track {
             display: flex;
             width: 100%;
-            cursor: grab; /* マウスカーソルをつかむ手に */
+            cursor: grab;
+            /* スワイプ操作をスムーズにするための設定 */
+            touch-action: pan-y; 
         }
         
         .carousel-track:active {
-            cursor: grabbing; /* クリック中は握った手に */
+            cursor: grabbing;
         }
         
-        /* カルーセル内の画像が縮まないように設定し、ブラウザ標準のドラッグを無効化 */
+        /* カルーセル内の画像が縮まないように設定 */
         .carousel-track img {
             min-width: 100%;
             flex-shrink: 0;
@@ -56,26 +61,26 @@
             -webkit-user-select: none;
         }
         
-        /* ドットナビゲーション（グレー＆少し小さく） */
+        /* ドットナビゲーション */
         .carousel-dots {
             position: absolute;
-            bottom: 15px;
+            bottom: 0px; 
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 8px; /* ドットの間隔 */
+            gap: 8px;
             z-index: 10;
         }
         .dot {
-            width: 8px; /* サイズ */
+            width: 8px;
             height: 8px;
-            background-color: #cccccc; /* 薄いグレー（非アクティブ時） */
+            background-color: #cccccc;
             border-radius: 50%;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .dot.active {
-            background-color: #666666; /* 濃いグレー（現在表示中の画像） */
+            background-color: #666666;
         }
         /* ＝＝＝ カルーセル用スタイルここまで ＝＝＝ */
     </style>
@@ -107,7 +112,8 @@
                 <img src="LP_ELISHE_260911_13-03.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_13-04.png" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            <div class="carousel-dots"></div> </div>
+            <div class="carousel-dots"></div>
+        </div>
 
         <img src="LP_ELISHE_260911_14.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
@@ -133,11 +139,10 @@
         </div>
         
         <img src="LP_ELISHE_260911_18.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
-        <a href="https://zozo.jp/women-brand/elishe/"><img src="LP_ELISHE_260911_19.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION"></a>
+        <img src="LP_ELISHE_260911_19.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
     </div>
 
     <script>
-        // ページ内のすべてのカルーセルを取得して、それぞれをセットアップする
         document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
             const track = wrapper.querySelector('.carousel-track');
             const images = Array.from(track.children);
@@ -148,9 +153,8 @@
             for (let i = 0; i < originalLength; i++) {
                 const dot = document.createElement('span');
                 dot.classList.add('dot');
-                if (i === 0) dot.classList.add('active'); // 最初のドットをアクティブに
+                if (i === 0) dot.classList.add('active'); 
                 
-                // ドットをクリックした時の処理
                 dot.addEventListener('click', () => {
                     currentSlide(i);
                 });
@@ -164,9 +168,10 @@
             track.appendChild(firstClone);
             track.insertBefore(lastClone, images[0]);
 
-            let slideIndex = 1; // クローンを追加したので1からスタート
+            let slideIndex = 1; 
             let isDragging = false;
-            let startPos = 0;
+            let startPosX = 0;
+            let startPosY = 0;
             let autoSlideInterval;
 
             // 初期位置に移動（アニメーションなし）
@@ -177,7 +182,6 @@
                 track.style.transition = "transform 0.4s ease-in-out";
                 track.style.transform = `translateX(-${slideIndex * 100}%)`;
 
-                // ドットの表示切替
                 let dotIndex = slideIndex - 1;
                 if (dotIndex === originalLength) dotIndex = 0;
                 if (dotIndex < 0) dotIndex = originalLength - 1;
@@ -188,21 +192,19 @@
                 }
             }
 
-            // 次へ進む
             function nextSlide() {
                 if (slideIndex >= originalLength + 1) return;
                 slideIndex++;
                 updateSlide();
             }
             
-            // 前へ戻る
             function prevSlide() {
                 if (slideIndex <= 0) return;
                 slideIndex--;
                 updateSlide();
             }
 
-            // アニメーションが終わったタイミングで、クローンならこっそり本物にすり替える
+            // ループ処理
             track.addEventListener('transitionend', () => {
                 const currentImage = track.children[slideIndex];
                 if (currentImage === firstClone) {
@@ -218,27 +220,44 @@
             });
 
             // ＝＝ 手動スワイプ・ドラッグ機能 ＝＝
-            track.addEventListener('touchstart', touchStart, { passive: true });
+            // passive: false にすることで e.preventDefault()（画面スクロールの無効化）を使えるようにする
+            track.addEventListener('touchstart', touchStart, { passive: false });
+            track.addEventListener('touchmove', touchMove, { passive: false });
             track.addEventListener('touchend', touchEnd);
-            track.addEventListener('touchmove', touchMove, { passive: true });
+            
             track.addEventListener('mousedown', touchStart);
+            track.addEventListener('mousemove', touchMove);
             track.addEventListener('mouseup', touchEnd);
             track.addEventListener('mouseleave', touchEnd);
-            track.addEventListener('mousemove', touchMove);
 
             function touchStart(e) {
                 clearInterval(autoSlideInterval);
-                startPos = getPositionX(e);
+                startPosX = getPositionX(e);
+                startPosY = getPositionY(e);
                 isDragging = true;
                 track.style.transition = "none";
             }
 
             function touchMove(e) {
                 if (!isDragging) return;
-                const currentPosition = getPositionX(e);
-                const diff = currentPosition - startPos;
+                
+                const currentPositionX = getPositionX(e);
+                const currentPositionY = getPositionY(e);
+                const diffX = currentPositionX - startPosX;
+                const diffY = currentPositionY - startPosY;
+
+                // 縦スクロール（上下の指の動き）の方が大きい場合は、スワイプをキャンセルして画面スクロールを優先する
+                if (Math.abs(diffY) > Math.abs(diffX)) {
+                    return;
+                }
+
+                // 横スクロールの場合は、画面が一緒に動かないようにする
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
+
                 const slideWidth = track.clientWidth;
-                const movePercent = (diff / slideWidth) * 100;
+                const movePercent = (diffX / slideWidth) * 100;
                 track.style.transform = `translateX(calc(-${slideIndex * 100}% + ${movePercent}%))`;
             }
 
@@ -246,9 +265,10 @@
                 if (!isDragging) return;
                 isDragging = false;
                 
-                const endPos = e.type.includes('mouse') ? e.pageX : (e.changedTouches ? e.changedTouches[0].clientX : startPos);
-                const diff = endPos - startPos;
+                const endPos = e.type.includes('mouse') ? e.pageX : (e.changedTouches ? e.changedTouches[0].clientX : startPosX);
+                const diff = endPos - startPosX;
 
+                // 50px以上スワイプしたら前後の画像へ、足りなければ元の画像に戻る
                 if (diff < -50) {
                     nextSlide();
                 } else if (diff > 50) {
@@ -259,8 +279,12 @@
                 startAutoSlide();
             }
 
+            // X座標とY座標の取得関数
             function getPositionX(e) {
                 return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+            function getPositionY(e) {
+                return e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
             }
 
             function currentSlide(index) {
@@ -272,7 +296,8 @@
 
             function startAutoSlide() {
                 clearInterval(autoSlideInterval);
-                autoSlideInterval = setInterval(nextSlide, 1500);
+                // 変更点：自動スライドの間隔を2秒（2000ミリ秒）に設定
+                autoSlideInterval = setInterval(nextSlide, 2000);
             }
 
             // 初期ロード時に自動スライド開始
