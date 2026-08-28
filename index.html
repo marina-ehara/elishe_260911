@@ -31,7 +31,7 @@
             pointer-events: none; /* ドラッグ時の画像ゴーストを防ぐ */
         }
 
-        /* ＝＝＝ ここからカルーセル用のスタイル ＝＝＝ */
+        /* ＝＝＝ ここからスライド（カルーセル）用のスタイル ＝＝＝ */
         .carousel-wrapper {
             position: relative;
             width: 100%;
@@ -87,7 +87,32 @@
         .dot.active {
             background-color: #666666;
         }
-        /* ＝＝＝ カルーセル用スタイルここまで ＝＝＝ */
+
+        /* ＝＝＝ ここから【ふわっと切り替わる（フェード）】用のスタイル ＝＝＝ */
+        .fade-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .fade-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            opacity: 0; /* 基本は透明にして見えなくする */
+            transition: opacity 1s ease-in-out; /* 1秒かけてふわっと変化 */
+            z-index: 1;
+        }
+        /* 1枚目の画像でブロック全体の高さを確保する */
+        .fade-wrapper img:first-child {
+            position: relative;
+        }
+        /* activeクラスがついた画像だけ表示する */
+        .fade-wrapper img.active {
+            opacity: 1;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -103,33 +128,44 @@
                 <img src="LP_ELISHE_260911_03-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
                 <img src="LP_ELISHE_260911_03-04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            </div>
+        </div>
 
         <img src="LP_ELISHE_260911_04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
         
-        <img src="LP_ELISHE_260911_05.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+        <div class="fade-wrapper">
+            <img src="LP_ELISHE_260911_05.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION" class="active">
+            <img src="LP_ELISHE_260911_05-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+            <img src="LP_ELISHE_260911_05-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+            <img src="LP_ELISHE_260911_05-04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+        </div>
+
         <img src="LP_ELISHE_260911_06.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
         <div class="carousel-wrapper no-dots">
             <div class="carousel-track">        
-        <img src="LP_ELISHE_260911_07.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
-        <img src="LP_ELISHE_260911_07-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_07.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_07-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            </div>
+        </div>
 
         <img src="LP_ELISHE_260911_08.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
-        <img src="LP_ELISHE_260911_09.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+        <div class="fade-wrapper">
+            <img src="LP_ELISHE_260911_09.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION" class="active">
+            <img src="LP_ELISHE_260911_09-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+            <img src="LP_ELISHE_260911_09-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+        </div>
+
         <img src="LP_ELISHE_260911_10.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
         <div class="carousel-wrapper no-dots">
             <div class="carousel-track">     
-        <img src="LP_ELISHE_260911_11.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
-        <img src="LP_ELISHE_260911_11-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
-        <img src="LP_ELISHE_260911_11-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
-        <img src="LP_ELISHE_260911_11-04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_11.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_11-02.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_11-03.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
+                <img src="LP_ELISHE_260911_11-04.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
             </div>
-            </div>
+        </div>
 
         <img src="LP_ELISHE_260911_12.jpg" alt="Elishe エリシェ Elishe 2026AW COLLECTION">
 
@@ -170,6 +206,7 @@
     </div>
 
     <script>
+        // ＝＝＝ 横スライド（カルーセル）用の処理 ＝＝＝
         document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
             const track = wrapper.querySelector('.carousel-track');
             const images = Array.from(track.children);
@@ -177,7 +214,6 @@
             const dotsContainer = wrapper.querySelector('.carousel-dots');
             let dots = [];
 
-            // 1. ドットのコンテナが存在する場合のみドットを生成する
             if (dotsContainer) {
                 for (let i = 0; i < originalLength; i++) {
                     const dot = document.createElement('span');
@@ -192,7 +228,6 @@
                 dots = Array.from(dotsContainer.children);
             }
 
-            // 2. 無限ループ用に最初と最後の画像を複製（クローン）して追加
             const firstClone = images[0].cloneNode(true);
             const lastClone = images[originalLength - 1].cloneNode(true);
             track.appendChild(firstClone);
@@ -204,10 +239,8 @@
             let startPosY = 0;
             let autoSlideInterval;
 
-            // 初期位置に移動（アニメーションなし）
             track.style.transform = `translateX(-${slideIndex * 100}%)`;
 
-            // スライドを動かす処理
             function updateSlide() {
                 track.style.transition = "transform 0.4s ease-in-out";
                 track.style.transform = `translateX(-${slideIndex * 100}%)`;
@@ -216,7 +249,6 @@
                 if (dotIndex === originalLength) dotIndex = 0;
                 if (dotIndex < 0) dotIndex = originalLength - 1;
                 
-                // ドットが存在する場合のみ色を変える
                 if (dots.length > 0) {
                     dots.forEach(dot => dot.classList.remove('active'));
                     if (dots[dotIndex]) {
@@ -237,7 +269,6 @@
                 updateSlide();
             }
 
-            // ループ処理
             track.addEventListener('transitionend', () => {
                 const currentImage = track.children[slideIndex];
                 if (currentImage === firstClone) {
@@ -252,7 +283,6 @@
                 }
             });
 
-            // ＝＝ 手動スワイプ・ドラッグ機能 ＝＝
             track.addEventListener('touchstart', touchStart, { passive: false });
             track.addEventListener('touchmove', touchMove, { passive: false });
             track.addEventListener('touchend', touchEnd);
@@ -324,10 +354,28 @@
 
             function startAutoSlide() {
                 clearInterval(autoSlideInterval);
-                autoSlideInterval = setInterval(nextSlide, 2000); // すべてのスライダーが2秒ごと
+                autoSlideInterval = setInterval(nextSlide, 2000); 
             }
 
             startAutoSlide();
+        });
+
+        // ＝＝＝ ここから【ふわっと切り替わる（フェード）】用の処理 ＝＝＝
+        document.querySelectorAll('.fade-wrapper').forEach(wrapper => {
+            const images = wrapper.querySelectorAll('img');
+            let currentIndex = 0;
+
+            // 2.5秒ごとに次の画像へフェード（1秒かけてフェードするので実質1.5秒停止）
+            setInterval(() => {
+                // 現在の画像から active を外す（ふわっと消える）
+                images[currentIndex].classList.remove('active');
+                
+                // 次の画像の番号を計算（最後まで行ったら0に戻る無限ループ）
+                currentIndex = (currentIndex + 1) % images.length;
+                
+                // 次の画像に active をつける（ふわっと現れる）
+                images[currentIndex].classList.add('active');
+            }, 2500); 
         });
     </script>
 </body>
