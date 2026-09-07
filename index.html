@@ -4,23 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elishe 2026AW COLLECTION</title>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XRETQNERMT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-XRETQNERMT');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XRETQNERMT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KDTZN793');</script>
-<!-- End Google Tag Manager -->
+      gtag('config', 'G-XRETQNERMT');
+    </script>
 
     <style>
         /* ブラウザのデフォルトの余白をリセット */
@@ -134,10 +127,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDTZN793"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
     <div class="lp-container">
         <img src="LP_ELISHE_260911_01.jpg" alt="Elishe 2026AW COLLECTION vol.01">
@@ -382,15 +371,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const images = wrapper.querySelectorAll('img');
             let currentIndex = 0;
 
-            // 2.5秒ごとに次の画像へフェード（1秒かけてフェードするので実質1.5秒停止）
             setInterval(() => {
-                // 現在の画像から active を外す（ふわっと消える）
                 images[currentIndex].classList.remove('active');
-                
-                // 次の画像の番号を計算（最後まで行ったら0に戻る無限ループ）
                 currentIndex = (currentIndex + 1) % images.length;
-                
-                // 次の画像に active をつける（ふわっと現れる）
                 images[currentIndex].classList.add('active');
             }, 2500); 
         });
